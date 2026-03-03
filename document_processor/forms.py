@@ -1,6 +1,25 @@
 from django import forms
 
 from .models import ExtractionRule, TemplateType, UploadedDocument, UserFieldSelection, UserProfile, WordTemplate
+
+
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+
+class MultipleFileField(forms.FileField):
+    widget = MultipleFileInput
+
+    def clean(self, data, initial=None):
+        single_clean = super().clean
+        if isinstance(data, (list, tuple)):
+            return [single_clean(d, initial) for d in data]
+        return [single_clean(data, initial)] if data else []
+
+
+class UploadDocumentForm(forms.ModelForm):
+    files = MultipleFileField(
+        widget=MultipleFileInput(attrs={"multiple": True, "class": "form-control"}),
 from .models import ExtractionRule, UploadedDocument, WordTemplate, UserFieldSelection
 
 
