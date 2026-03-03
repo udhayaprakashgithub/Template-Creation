@@ -1,0 +1,9 @@
+{% extends 'document_processor/base.html' %}
+{% block content %}
+<h3>Generated Document</h3>
+{% if generated %}
+  <a class="btn btn-primary" href="{{ generated.generated_file.url }}">Download Final DOCX</a>
+{% else %}
+  <p>No generated file available.</p>
+{% endif %}
+{% endblock %}
