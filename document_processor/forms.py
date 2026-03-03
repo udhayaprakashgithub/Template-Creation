@@ -1,6 +1,7 @@
 from django import forms
 
 from .models import ExtractionRule, TemplateType, UploadedDocument, UserFieldSelection, UserProfile, WordTemplate
+from .models import ExtractionRule, UploadedDocument, WordTemplate, UserFieldSelection
 
 
 class UploadDocumentForm(forms.ModelForm):

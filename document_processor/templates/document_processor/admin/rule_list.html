@@ -5,5 +5,7 @@
 {% for obj in object_list %}
 <tr><td>{{ obj.template_type }}</td><td>{{ obj.rule_type }}</td><td>{{ obj.source_key }}</td><td>{{ obj.target_field }}</td><td>{{ obj.priority }}</td><td>{{ obj.is_enabled }}</td><td><a class="btn btn-sm btn-outline-secondary" href="{% url 'document_processor:admin-rule-edit' obj.id %}">Edit</a></td></tr>
 {% endfor %}
+<table class="table mt-3"><tr><th>Type</th><th>Source</th><th>Target</th><th></th></tr>
+{% for obj in object_list %}<tr><td>{{ obj.rule_type }}</td><td>{{ obj.source_key }}</td><td>{{ obj.target_field }}</td><td><a href="{% url 'document_processor:admin-rule-edit' obj.id %}">Edit</a></td></tr>{% endfor %}
 </table>
 {% endblock %}

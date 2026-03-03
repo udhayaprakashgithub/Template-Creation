@@ -10,6 +10,7 @@ from django.utils import timezone
 from django.views.generic import CreateView, DetailView, FormView, ListView, TemplateView, UpdateView
 
 from .forms import ExtractionRuleForm, TemplateTypeForm, UploadDocumentForm, UserRoleForm, WordTemplateForm
+from .forms import ExtractionRuleForm, UploadDocumentForm, WordTemplateForm
 from .models import (
     AuditTrail,
     ExtractedField,
@@ -20,6 +21,9 @@ from .models import (
     UploadedDocument,
     UserFieldSelection,
     UserProfile,
+    TextractResult,
+    UploadedDocument,
+    UserFieldSelection,
     WordTemplate,
 )
 from .permissions import AdminRequiredMixin, UserOrAdminRequiredMixin
@@ -81,6 +85,10 @@ class UploadDocumentView(UserOrAdminRequiredMixin, FormView):
             return self.form_invalid(form)
 
         files = self.request.FILES.getlist("files")
+    def form_valid(self, form):
+        template_type = form.cleaned_data["template_type"]
+        files = self.request.FILES.getlist("files")
+
         for file_obj in files:
             uploaded = UploadedDocument.objects.create(
                 uploaded_by=self.request.user,
@@ -350,3 +358,7 @@ class UserManagementView(AdminRequiredMixin, TemplateView):
         else:
             messages.error(request, "Invalid role selection.")
         return redirect("document_processor:admin-user-management")
+class UserManagementView(AdminRequiredMixin, ListView):
+    model = User
+    template_name = "document_processor/admin/user_management.html"
+    queryset = User.objects.select_related("profile").order_by("username")

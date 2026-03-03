@@ -6,5 +6,10 @@
   {% csrf_token %}
   {{ form.as_p }}
   <button class="btn btn-primary" type="submit">Upload and Continue</button>
+<h3>Upload PDF Documents</h3>
+<form method="post" enctype="multipart/form-data" class="card card-body">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button class="btn btn-primary" type="submit">Upload</button>
 </form>
 {% endblock %}
