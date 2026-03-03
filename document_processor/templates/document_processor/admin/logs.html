@@ -1,6 +1,8 @@
 {% extends 'document_processor/base.html' %}
 {% block content %}
 <h3>Processing Logs</h3>
+<table class="table table-striped"><tr><th>When</th><th>Document</th><th>Actor</th><th>Status</th><th>Message</th></tr>
+{% for log in object_list %}<tr><td>{{ log.created_at }}</td><td>{{ log.document }}</td><td>{{ log.actor }}</td><td>{{ log.status_from }} → {{ log.status_to }}</td><td>{{ log.message }}</td></tr>{% endfor %}
 <table class="table"><tr><th>Document</th><th>Actor</th><th>Status</th><th>Time</th></tr>
 {% for log in object_list %}<tr><td>{{ log.document }}</td><td>{{ log.actor }}</td><td>{{ log.status_from }} -> {{ log.status_to }}</td><td>{{ log.created_at }}</td></tr>{% endfor %}
 </table>

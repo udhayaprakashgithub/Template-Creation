@@ -10,6 +10,15 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
       <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'document_processor:dashboard' %}">Document Processor</a>
+        <div class="navbar-nav">
+          <a class="nav-link" href="{% url 'document_processor:upload' %}">User Upload</a>
+          <a class="nav-link" href="{% url 'document_processor:user-history' %}">User History</a>
+          <a class="nav-link" href="{% url 'document_processor:admin-dashboard' %}">Admin Portal</a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container pb-5">
       </div>
     </nav>
     <main class="container">

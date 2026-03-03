@@ -1,6 +1,8 @@
 {% extends 'document_processor/base.html' %}
 {% block content %}
 <div class="d-flex justify-content-between"><h3>Word Templates</h3><a class="btn btn-primary" href="{% url 'document_processor:admin-template-create' %}">New Template</a></div>
+<table class="table mt-3"><tr><th>Name</th><th>Type</th><th>Version</th><th>Active</th><th>Uploaded By</th></tr>
+{% for obj in object_list %}<tr><td>{{ obj.name }}</td><td>{{ obj.template_type }}</td><td>{{ obj.version }}</td><td>{{ obj.is_active }}</td><td>{{ obj.uploaded_by }}</td></tr>{% endfor %}
 <table class="table mt-3"><tr><th>Name</th><th>Type</th><th>Version</th><th>Active</th></tr>
 {% for obj in object_list %}<tr><td>{{ obj.name }}</td><td>{{ obj.template_type }}</td><td>{{ obj.version }}</td><td>{{ obj.is_active }}</td></tr>{% endfor %}
 </table>

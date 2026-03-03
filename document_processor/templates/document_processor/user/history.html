@@ -1,5 +1,12 @@
 {% extends 'document_processor/base.html' %}
 {% block content %}
+<h3>Processing History</h3>
+<table class="table table-striped">
+  <thead><tr><th>Uploaded</th><th>File</th><th>Template</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody>
+    {% for doc in object_list %}
+      <tr>
+        <td>{{ doc.created_at }}</td>
 <h3>Document History</h3>
 <table class="table table-striped">
   <thead><tr><th>File</th><th>Template</th><th>Status</th><th>Actions</th></tr></thead>
@@ -12,6 +19,7 @@
         <td><a href="{% url 'document_processor:preview' doc.id %}" class="btn btn-sm btn-outline-primary">Open</a></td>
       </tr>
     {% empty %}
+      <tr><td colspan="5">No documents uploaded.</td></tr>
       <tr><td colspan="4">No documents uploaded.</td></tr>
     {% endfor %}
   </tbody>

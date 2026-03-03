@@ -1,4 +1,6 @@
 from django import forms
+
+from .models import ExtractionRule, TemplateType, UploadedDocument, UserFieldSelection, UserProfile, WordTemplate
 from .models import ExtractionRule, UploadedDocument, WordTemplate, UserFieldSelection
 
 
@@ -13,6 +15,18 @@ class UploadDocumentForm(forms.ModelForm):
         model = UploadedDocument
         fields = ["template_type"]
         widgets = {"template_type": forms.Select(attrs={"class": "form-select"})}
+
+
+class TemplateTypeForm(forms.ModelForm):
+    class Meta:
+        model = TemplateType
+        fields = ["code", "name", "description", "is_active"]
+        widgets = {
+            "code": forms.Select(attrs={"class": "form-select"}),
+            "name": forms.TextInput(attrs={"class": "form-control"}),
+            "description": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
+            "is_active": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+        }
 
 
 class WordTemplateForm(forms.ModelForm):
@@ -41,6 +55,20 @@ class ExtractionRuleForm(forms.ModelForm):
             "priority",
             "is_enabled",
         ]
+        widgets = {
+            "template_type": forms.Select(attrs={"class": "form-select"}),
+            "rule_type": forms.Select(attrs={"class": "form-select"}),
+            "source_key": forms.TextInput(attrs={"class": "form-control"}),
+            "target_field": forms.TextInput(attrs={"class": "form-control"}),
+            "regex_pattern": forms.TextInput(attrs={"class": "form-control"}),
+            "table_index": forms.NumberInput(attrs={"class": "form-control", "min": 1}),
+            "priority": forms.NumberInput(attrs={"class": "form-control", "min": 1}),
+            "is_enabled": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+        }
+
+
+class UserRoleForm(forms.Form):
+    role = forms.ChoiceField(choices=UserProfile.Role.choices, widget=forms.Select(attrs={"class": "form-select"}))
 
 
 class FieldSelectionForm(forms.ModelForm):

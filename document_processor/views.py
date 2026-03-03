@@ -9,12 +9,18 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import CreateView, DetailView, FormView, ListView, TemplateView, UpdateView
 
+from .forms import ExtractionRuleForm, TemplateTypeForm, UploadDocumentForm, UserRoleForm, WordTemplateForm
 from .forms import ExtractionRuleForm, UploadDocumentForm, WordTemplateForm
 from .models import (
     AuditTrail,
     ExtractedField,
     ExtractionRule,
     ProcessingLog,
+    TemplateType,
+    TextractResult,
+    UploadedDocument,
+    UserFieldSelection,
+    UserProfile,
     TextractResult,
     UploadedDocument,
     UserFieldSelection,
@@ -47,12 +53,38 @@ class DocumentAccessMixin(UserOrAdminRequiredMixin):
 class DashboardView(UserOrAdminRequiredMixin, TemplateView):
     template_name = "document_processor/dashboard.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        role = getattr(getattr(self.request.user, "profile", None), "role", "user")
+        context["role"] = role
+        context["documents_count"] = UploadedDocument.objects.count()
+        context["templates_count"] = WordTemplate.objects.filter(is_active=True).count()
+        context["rules_count"] = ExtractionRule.objects.filter(is_enabled=True).count()
+        return context
+
 
 class UploadDocumentView(UserOrAdminRequiredMixin, FormView):
     template_name = "document_processor/user/upload.html"
     form_class = UploadDocumentForm
     success_url = reverse_lazy("document_processor:user-history")
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        configured_types = TemplateType.objects.filter(
+            is_active=True,
+            templates__is_active=True,
+            extraction_rules__is_enabled=True,
+        ).distinct()
+        form.fields["template_type"].queryset = configured_types
+        return form
+
+    def form_valid(self, form):
+        template_type = form.cleaned_data["template_type"]
+        if not template_type.templates.filter(is_active=True).exists() or not template_type.extraction_rules.filter(is_enabled=True).exists():
+            messages.error(self.request, "Selected template type is not fully configured by admin.")
+            return self.form_invalid(form)
+
+        files = self.request.FILES.getlist("files")
     def form_valid(self, form):
         template_type = form.cleaned_data["template_type"]
         files = self.request.FILES.getlist("files")
@@ -223,6 +255,38 @@ class GenerateDocumentView(DocumentAccessMixin, TemplateView):
         return self.render_to_response(self.get_context_data(document=document, generated=generated))
 
 
+class AdminDashboardView(AdminRequiredMixin, TemplateView):
+    template_name = "document_processor/admin/dashboard.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["template_type_count"] = TemplateType.objects.count()
+        context["template_count"] = WordTemplate.objects.count()
+        context["rule_count"] = ExtractionRule.objects.count()
+        context["user_count"] = User.objects.count()
+        return context
+
+
+class TemplateTypeListView(AdminRequiredMixin, ListView):
+    model = TemplateType
+    template_name = "document_processor/admin/template_type_list.html"
+    queryset = TemplateType.objects.order_by("name")
+
+
+class TemplateTypeCreateView(AdminRequiredMixin, CreateView):
+    model = TemplateType
+    form_class = TemplateTypeForm
+    template_name = "document_processor/admin/template_type_form.html"
+    success_url = reverse_lazy("document_processor:admin-template-type-list")
+
+
+class TemplateTypeUpdateView(AdminRequiredMixin, UpdateView):
+    model = TemplateType
+    form_class = TemplateTypeForm
+    template_name = "document_processor/admin/template_type_form.html"
+    success_url = reverse_lazy("document_processor:admin-template-type-list")
+
+
 class WordTemplateListView(AdminRequiredMixin, ListView):
     model = WordTemplate
     template_name = "document_processor/admin/template_list.html"
@@ -267,6 +331,33 @@ class ProcessingLogListView(AdminRequiredMixin, ListView):
     queryset = ProcessingLog.objects.select_related("document", "actor").order_by("-created_at")
 
 
+class UserManagementView(AdminRequiredMixin, TemplateView):
+    template_name = "document_processor/admin/user_management.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        users = User.objects.select_related("profile").order_by("username")
+        context["rows"] = [
+            {
+                "user": user,
+                "form": UserRoleForm(initial={"role": getattr(getattr(user, "profile", None), "role", UserProfile.Role.USER)}),
+            }
+            for user in users
+        ]
+        return context
+
+    def post(self, request, *args, **kwargs):
+        user_id = request.POST.get("user_id")
+        target = get_object_or_404(User, id=user_id)
+        form = UserRoleForm(request.POST)
+        if form.is_valid():
+            profile, _ = UserProfile.objects.get_or_create(user=target)
+            profile.role = form.cleaned_data["role"]
+            profile.save(update_fields=["role", "updated_at"])
+            messages.success(request, f"Updated role for {target.username}.")
+        else:
+            messages.error(request, "Invalid role selection.")
+        return redirect("document_processor:admin-user-management")
 class UserManagementView(AdminRequiredMixin, ListView):
     model = User
     template_name = "document_processor/admin/user_management.html"
