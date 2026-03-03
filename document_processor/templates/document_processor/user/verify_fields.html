@@ -1,0 +1,19 @@
+{% extends 'document_processor/base.html' %}
+{% block content %}
+<h3>Verify All Extracted Fields</h3>
+<div class="alert alert-info">Review and edit every field before generation.</div>
+<form method="post" class="card card-body">
+  {% csrf_token %}
+  <div class="row g-3">
+    {% for field in fields %}
+      <div class="col-md-6">
+        <label class="form-label">{{ field.field_name }}</label>
+        <input class="form-control" type="text" name="field_{{ field.id }}" value="{{ field.extracted_value }}">
+      </div>
+    {% empty %}
+      <div class="col-12">No extracted fields found. Please run processing first.</div>
+    {% endfor %}
+  </div>
+  <button class="btn btn-success mt-3">Confirm Selections and Generate</button>
+</form>
+{% endblock %}

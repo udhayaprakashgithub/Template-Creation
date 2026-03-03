@@ -1,0 +1,12 @@
+{% extends 'document_processor/base.html' %}
+{% block content %}
+<h3>Generated Output</h3>
+{% if generated %}
+  <div class="card card-body">
+    <p>Document generated successfully. You can download the editable DOCX file.</p>
+    <a class="btn btn-primary" href="{{ generated.generated_file.url }}">Download Final DOCX</a>
+  </div>
+{% else %}
+  <p>No generated file available.</p>
+{% endif %}
+{% endblock %}

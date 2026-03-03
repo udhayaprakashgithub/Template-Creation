@@ -1,0 +1,22 @@
+{% extends 'document_processor/base.html' %}
+{% block content %}
+<h3>User Management</h3>
+<p class="text-muted">Assign roles here. Admin should configure platform before users start upload/processing.</p>
+<table class="table table-striped">
+  <thead><tr><th>User</th><th>Email</th><th>Role</th><th>Save</th></tr></thead>
+  <tbody>
+    {% for row in rows %}
+      <tr>
+        <td>{{ row.user.username }}</td>
+        <td>{{ row.user.email }}</td>
+        <td>
+          <form method="post" class="d-flex gap-2">{% csrf_token %}
+            <input type="hidden" name="user_id" value="{{ row.user.id }}">
+            {{ row.form.role }}
+        </td>
+        <td><button class="btn btn-sm btn-primary">Update</button></form></td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

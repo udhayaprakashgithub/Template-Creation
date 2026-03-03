@@ -1,0 +1,17 @@
+{% extends 'document_processor/base.html' %}
+{% block content %}
+<h3 class="mb-3">Admin Configuration Portal</h3>
+<div class="row g-3 mb-3">
+  <div class="col-md-3"><div class="card card-body"><small>Template Types</small><h4>{{ template_type_count }}</h4></div></div>
+  <div class="col-md-3"><div class="card card-body"><small>Word Templates</small><h4>{{ template_count }}</h4></div></div>
+  <div class="col-md-3"><div class="card card-body"><small>Extraction Rules</small><h4>{{ rule_count }}</h4></div></div>
+  <div class="col-md-3"><div class="card card-body"><small>Users</small><h4>{{ user_count }}</h4></div></div>
+</div>
+<div class="list-group">
+  <a class="list-group-item list-group-item-action" href="{% url 'document_processor:admin-template-type-list' %}">Step 1: Configure Template Types</a>
+  <a class="list-group-item list-group-item-action" href="{% url 'document_processor:admin-template-list' %}">Step 2: Upload Word Templates</a>
+  <a class="list-group-item list-group-item-action" href="{% url 'document_processor:admin-rule-list' %}">Step 3: Configure Extraction Rules</a>
+  <a class="list-group-item list-group-item-action" href="{% url 'document_processor:admin-user-management' %}">Step 4: Manage User Roles</a>
+  <a class="list-group-item list-group-item-action" href="{% url 'document_processor:admin-logs' %}">Step 5: Monitor Logs</a>
+</div>
+{% endblock %}
