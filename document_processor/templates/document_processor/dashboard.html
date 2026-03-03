@@ -22,5 +22,9 @@
       <a class="btn btn-dark" href="{% url 'document_processor:admin-dashboard' %}">Open Admin Configuration Portal</a>
     </div>
   </div>
+<div class="row g-3">
+  <div class="col-md-4"><a class="btn btn-primary w-100" href="{% url 'document_processor:upload' %}">Upload Documents</a></div>
+  <div class="col-md-4"><a class="btn btn-outline-primary w-100" href="{% url 'document_processor:user-history' %}">My History</a></div>
+  <div class="col-md-4"><a class="btn btn-outline-secondary w-100" href="{% url 'document_processor:admin-template-list' %}">Admin Area</a></div>
 </div>
 {% endblock %}

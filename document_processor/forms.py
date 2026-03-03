@@ -20,6 +20,12 @@ class MultipleFileField(forms.FileField):
 class UploadDocumentForm(forms.ModelForm):
     files = MultipleFileField(
         widget=MultipleFileInput(attrs={"multiple": True, "class": "form-control"}),
+from .models import ExtractionRule, UploadedDocument, WordTemplate, UserFieldSelection
+
+
+class UploadDocumentForm(forms.ModelForm):
+    files = forms.FileField(
+        widget=forms.ClearableFileInput(attrs={"multiple": True, "class": "form-control"}),
         required=True,
         help_text="Upload one or more PDF files.",
     )

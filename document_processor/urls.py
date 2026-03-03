@@ -23,4 +23,11 @@ urlpatterns = [
     path("admin-portal/rules/<int:pk>/edit/", views.ExtractionRuleUpdateView.as_view(), name="admin-rule-edit"),
     path("admin-portal/logs/", views.ProcessingLogListView.as_view(), name="admin-logs"),
     path("admin-portal/users/", views.UserManagementView.as_view(), name="admin-user-management"),
+    path("admin/templates/", views.WordTemplateListView.as_view(), name="admin-template-list"),
+    path("admin/templates/new/", views.WordTemplateCreateView.as_view(), name="admin-template-create"),
+    path("admin/rules/", views.ExtractionRuleListView.as_view(), name="admin-rule-list"),
+    path("admin/rules/new/", views.ExtractionRuleCreateView.as_view(), name="admin-rule-create"),
+    path("admin/rules/<int:pk>/edit/", views.ExtractionRuleUpdateView.as_view(), name="admin-rule-edit"),
+    path("admin/logs/", views.ProcessingLogListView.as_view(), name="admin-logs"),
+    path("admin/users/", views.UserManagementView.as_view(), name="admin-user-management"),
 ]

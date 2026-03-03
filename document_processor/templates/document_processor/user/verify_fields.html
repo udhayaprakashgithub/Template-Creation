@@ -2,6 +2,7 @@
 {% block content %}
 <h3>Verify All Extracted Fields</h3>
 <div class="alert alert-info">Review and edit every field before generation.</div>
+<h3>Verify Extracted Fields</h3>
 <form method="post" class="card card-body">
   {% csrf_token %}
   <div class="row g-3">
@@ -15,5 +16,8 @@
     {% endfor %}
   </div>
   <button class="btn btn-success mt-3">Confirm Selections and Generate</button>
+    {% endfor %}
+  </div>
+  <button class="btn btn-success mt-3">Confirm & Generate</button>
 </form>
 {% endblock %}
