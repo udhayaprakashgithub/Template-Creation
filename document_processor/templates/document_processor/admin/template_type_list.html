@@ -1,0 +1,18 @@
+{% extends 'document_processor/base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center">
+  <h3>Template Types</h3>
+  <a class="btn btn-primary" href="{% url 'document_processor:admin-template-type-create' %}">New Template Type</a>
+</div>
+<table class="table table-striped mt-3">
+  <thead><tr><th>Code</th><th>Name</th><th>Active</th><th></th></tr></thead>
+  <tbody>
+    {% for obj in object_list %}
+    <tr>
+      <td>{{ obj.code }}</td><td>{{ obj.name }}</td><td>{{ obj.is_active }}</td>
+      <td><a class="btn btn-sm btn-outline-secondary" href="{% url 'document_processor:admin-template-type-edit' obj.id %}">Edit</a></td>
+    </tr>
+    {% empty %}<tr><td colspan="4">No template types.</td></tr>{% endfor %}
+  </tbody>
+</table>
+{% endblock %}

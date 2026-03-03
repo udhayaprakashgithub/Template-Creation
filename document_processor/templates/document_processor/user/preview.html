@@ -1,0 +1,23 @@
+{% extends 'document_processor/base.html' %}
+{% block content %}
+<h3>Preview and Process</h3>
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="card card-body">
+      <h5>PDF Preview</h5>
+      <p class="text-muted">PDF rendering hook placeholder (iframe/pdf.js integration point).</p>
+      <p><strong>{{ document.original_filename }}</strong></p>
+      <p>Status: <span class="badge bg-secondary">{{ document.get_status_display }}</span></p>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card card-body">
+      <h5>Extracted Data Snapshot</h5>
+      <ul class="small">
+      {% for f in document.extracted_fields.all %}<li><strong>{{ f.field_name }}</strong>: {{ f.extracted_value|truncatechars:120 }}</li>{% empty %}<li>No extracted fields yet.</li>{% endfor %}
+      </ul>
+      <form method="post" action="{% url 'document_processor:process-document' document.id %}">{% csrf_token %}<button class="btn btn-primary">Run Textract Analysis</button></form>
+    </div>
+  </div>
+</div>
+{% endblock %}

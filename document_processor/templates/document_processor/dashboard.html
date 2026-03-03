@@ -1,0 +1,26 @@
+{% extends 'document_processor/base.html' %}
+{% block content %}
+<h3 class="mb-3">Unified Portal</h3>
+<div class="row g-3 mb-4">
+  <div class="col-md-4"><div class="card card-body"><h6>Total Documents</h6><h3>{{ documents_count }}</h3></div></div>
+  <div class="col-md-4"><div class="card card-body"><h6>Active Templates</h6><h3>{{ templates_count }}</h3></div></div>
+  <div class="col-md-4"><div class="card card-body"><h6>Enabled Rules</h6><h3>{{ rules_count }}</h3></div></div>
+</div>
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="card card-body h-100">
+      <h5>User Workflow</h5>
+      <p class="text-muted">Use this after admin has configured template types, word templates, and extraction rules.</p>
+      <a class="btn btn-primary mb-2" href="{% url 'document_processor:upload' %}">1) Select template and upload PDF</a>
+      <a class="btn btn-outline-primary" href="{% url 'document_processor:user-history' %}">2) Continue processing from history</a>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card card-body h-100">
+      <h5>Admin Workflow</h5>
+      <p class="text-muted">Configure everything first, then user processing should begin.</p>
+      <a class="btn btn-dark" href="{% url 'document_processor:admin-dashboard' %}">Open Admin Configuration Portal</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
